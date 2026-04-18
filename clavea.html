@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio · Carrito de Compras con React · Gestión de Categorías y Productos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #eef2f5;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+        .hoja {
+            max-width: 1280px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.25);
+            overflow: hidden;
+            padding: 2rem 2.2rem;
+            border: 1px solid rgba(0,80,100,0.1);
+        }
+        .catedra {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #1e6f5c;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .catedra-titulo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e5a5c;
+            letter-spacing: -0.3px;
+        }
+        .catedra-titulo span {
+            font-weight: 300;
+            font-size: 1rem;
+            color: #2c7a6e;
+            display: block;
+            line-height: 1.2;
+        }
+        .agile-badge {
+            text-align: right;
+            font-weight: 600;
+            color: #1c6b5e;
+            border-left: 2px solid #bdd4cf;
+            padding-left: 1.2rem;
+        }
+        .agile-badge small {
+            display: block;
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: #2f6b62;
+        }
+        .materia {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            background: #f0f7f5;
+            padding: 1rem 1.4rem;
+            border-radius: 24px;
+            margin: 0.8rem 0 1.8rem;
+            border: 1px dashed #289b87;
+        }
+        .materia h2 {
+            font-weight: 500;
+            color: #175f53;
+            font-size: 1.6rem;
+        }
+        .materia .lab {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: #1e6f5c;
+            color: white;
+            padding: 0.2rem 1.2rem;
+            border-radius: 60px;
+            letter-spacing: 1px;
+        }
+        .fila-alumno {
+            background: #ffffff;
+            border: 2px solid #cfe3df;
+            border-radius: 40px;
+            padding: 1.2rem 2rem;
+            margin: 1.5rem 0 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.1rem;
+        }
+        .fila-alumno div {
+            margin: 0.3rem 0;
+        }
+        .linea-nota {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .linea-nota strong {
+            background: #cf6f4a;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+        .seccion-titulo {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #175f53;
+            margin: 2rem 0 1rem 0;
+            border-left: 12px solid #f4b436;
+            padding-left: 1rem;
+        }
+        .seccion-titulo-small {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #175f53;
+            margin: 1.5rem 0 0.8rem 0;
+            border-left: 8px solid #f4b436;
+            padding-left: 1rem;
+        }
+        .card-ejercicio {
+            background: #f9fcff;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid #d3e4ec;
+        }
+        .requisito {
+            background: #fff2cf;
+            padding: 0.5rem 1rem;
+            border-radius: 16px;
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+        .badge-ejemplo {
+            background: #fff2cf;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #8a6100;
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+        .badge-react {
+            background: #61dafb;
+            color: #20232a;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .grid-productos-ejemplo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .producto-ejemplo {
+            background: #eef3f0;
+            border-radius: 20px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #cfe3df;
+        }
+        .producto-ejemplo .imagen {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .producto-ejemplo .titulo {
+            font-weight: 700;
+            color: #175f53;
+        }
+        .producto-ejemplo .precio {
+            color: #1e6f5c;
+            font-weight: 800;
+        }
+        hr {
+            border: 1px solid #c6dee9;
+            margin: 1.5rem 0;
+        }
+        .firma-carnet {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 1.5rem;
+            border-top: 2px solid #bdd4cf;
+            margin-top: 2rem;
+            padding-top: 1.2rem;
+            font-size: 1.1rem;
+            color: #175f53;
+        }
+        .footnote {
+            text-align: right;
+            color: #397a8b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .instruccion {
+            background: #eef3f0;
+            border-left: 8px solid #289b87;
+            padding: 0.8rem 1.8rem;
+            border-radius: 32px;
+            margin: 1rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.6rem;
+            text-align: left;
+            border-bottom: 1px solid #cbdae3;
+        }
+        th {
+            background: #e0efea;
+            color: #175f53;
+        }
+        .puntos {
+            text-align: center;
+            font-weight: 700;
+            color: #175f53;
+            background: #ebf5f9;
+            border-radius: 20px;
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+<div class="hoja">
+
+    <!-- ENCABEZADO -->
+    <div class="catedra">
+        <div class="catedra-titulo">
+            UNICAES
+            <span>Desarrollo de Aplicaciones Web · React</span>
+        </div>
+        <div class="agile-badge">
+            Ejercicio · Carrito de Compras con React
+            <small>Valor: 50%</small>
+        </div>
+    </div>
+
+    <!-- MATERIA Y DETALLES -->
+    <div class="materia">
+        <h2>
+            ⚛️ Carrito de Compras con React · Gestión de Categorías y Productos
+        </h2>
+        <div class="lab">Parcial #2</div>
+    </div>
+
+    <!-- GRUPO Y FECHA -->
+    <div style="display: flex; gap: 2rem; justify-content: space-between; background: #e0efea; padding: 0.6rem 2rem; border-radius: 40px; margin-bottom: 0.8rem;">
+        <div><strong>Estudiante:</strong> _________________________________</div>
+        <div><strong>Fecha:</strong> 17-04-2026</div>
+        <div class="linea-nota"><strong>Nota:</strong> _________</div>
+    </div>
+
+    <!-- DATOS DEL ALUMNO -->
+    <div class="fila-alumno">
+        <div><strong>Nombre completo:</strong> __________________________________________________</div>
+        <div class="linea-nota"><strong>Carnet:</strong> ________________________</div>
+    </div>
+
+    <div class="instruccion">
+        <span class="badge-agil">📌 Tecnologías requeridas:</span>
+        <p style="margin-top: 0.5rem; font-size: 1rem; color: #1c5a4f;">
+            <span class="badge-react">⚛️ React</span> <span class="badge-react">📦 useState / useContext</span> <span class="badge-react">🎨 CSS Modules / Tailwind</span>
+            <br><strong>No se permite el uso de base de datos</strong> · Los datos se manejarán con estado local de React (arrays/objetos en el frontend).
+        </p>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ENUNCIADO DEL EJERCICIO -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo">📝 Enunciado: Crear un carrito de compras con React</div>
+
+    <div class="card-ejercicio">
+        <h3>🎯 Requerimientos funcionales</h3>
+        <div class="requisito">✅ El sistema debe permitir <strong>administrar categorías</strong> de productos (mostrar listado de categorías).</div>
+        <div class="requisito">✅ Debe permitir <strong>gestionar productos</strong> organizados por categorías (filtrar productos al seleccionar una categoría).</div>
+        <div class="requisito">✅ Los productos deben mostrar: nombre, descripción, precio e imagen representativa (emoji o ícono).</div>
+        <div class="requisito">✅ El usuario debe poder <strong>agregar productos al carrito de compras</strong>.</div>
+        <div class="requisito">✅ El carrito debe mostrar: productos agregados, cantidades, subtotales y total general.</div>
+        <div class="requisito">✅ Se debe poder <strong>modificar cantidades</strong> (incrementar/decrementar) y <strong>eliminar productos</strong> del carrito.</div>
+        <div class="requisito">✅ Opciones de <strong>"Continuar comprando"</strong> y <strong>"Completar compra"</strong> (simular finalización con un alert o mensaje de resumen).</div>
+        <div class="requisito">✅ <strong>Sin base de datos</strong> · Los datos de categorías y productos deben estar precargados en un array dentro del estado de React.</div>
+        <div class="requisito">✅ El carrito debe persistir al recargar la página usando <strong>localStorage</strong>.</div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ESTRUCTURA SUGERIDA -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo-small">🏗️ Estructura sugerida del proyecto React</div>
+    <div class="card-ejercicio">
+        <pre style="background: #1e2a2a; color: #c3e8d0; padding: 1rem; border-radius: 16px; overflow-x: auto; font-family: monospace;">
+src/
+├── components/
+│   ├── Categorias.jsx
+│   ├── Productos.jsx
+│   ├── ProductoCard.jsx
+│   ├── Carrito.jsx
+│   ├── CarritoItem.jsx
+│   └── ResumenCompra.jsx
+├── data/
+│   └── productosData.js   (array con categorías y productos precargados)
+├── hooks/
+│   └── useCarrito.js      (lógica del carrito con useState y localStorage)
+├── App.jsx
+├── App.css
+└── main.jsx
+        </pre>
+        <div class="badge-ejemplo" style="margin-top: 0.8rem;">💡 Los datos de productos deben estar precargados (sin API ni base de datos externa).</div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- EJEMPLO DE DATOS PRECARGADOS -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo-small">📦 Ejemplo de datos precargados (JavaScript/React)</div>
+    <div class="card-ejercicio">
+        <pre style="background: #1e2a2a; color: #c3e8d0; padding: 1rem; border-radius: 16px; overflow-x: auto; font-family: monospace;">
+// productosData.js
+export const categorias = [
+    { id: 1, nombre: "🎹 Instrumentos Musicales", icono: "🎹" },
+    { id: 2, nombre: "🧸 Juguetes Educativos", icono: "🧸" },
+    { id: 3, nombre: "📚 Libros", icono: "📚" }
+];
+
+export const productos = [
+    { id: 1, nombre: "My Music Center Synthesizer", descripcion: "Teclado electrónico con 8 sonidos", precio: 49.99, imagen: "🎹", categoriaId: 1 },
+    { id: 2, nombre: "Toy Cash Register", descripcion: "Caja registradora de juguete", precio: 24.99, imagen: "🛒", categoriaId: 2 },
+    { id: 3, nombre: "Cuentos Infantiles", descripcion: "Libro ilustrado para niños", precio: 12.99, imagen: "📖", categoriaId: 3 }
+];
+        </pre>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- EJEMPLO VISUAL DE PRODUCTOS -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo-small">🖼️ Ejemplo visual de productos (referencia)</div>
+    <div class="grid-productos-ejemplo">
+        <div class="producto-ejemplo">
+            <div class="imagen">🎹</div>
+            <div class="titulo">My Music Center Synthesizer</div>
+            <div class="descripcion" style="font-size:0.8rem; color:#5a7c7a;">Teclado electrónico con 8 sonidos, 8 tempos, 4 baterías</div>
+            <div class="precio">$49.99</div>
+            <div class="badge-ejemplo">➕ Agregar al carrito</div>
+        </div>
+        <div class="producto-ejemplo">
+            <div class="imagen">🛒</div>
+            <div class="titulo">Toy Grocery Cash Register</div>
+            <div class="descripcion" style="font-size:0.8rem; color:#5a7c7a;">Caja registradora de juguete con escáner y sonidos</div>
+            <div class="precio">$24.99</div>
+            <div class="badge-ejemplo">➕ Agregar al carrito</div>
+        </div>
+        <div class="producto-ejemplo">
+            <div class="imagen">📖</div>
+            <div class="titulo">Cuentos Infantiles Ilustrados</div>
+            <div class="descripcion" style="font-size:0.8rem; color:#5a7c7a;">Libro de cuentos con ilustraciones a color</div>
+            <div class="precio">$12.99</div>
+            <div class="badge-ejemplo">➕ Agregar al carrito</div>
+        </div>
+        <div class="producto-ejemplo">
+            <div class="imagen">🎧</div>
+            <div class="titulo">Auriculares Bluetooth Kids</div>
+            <div class="descripcion" style="font-size:0.8rem; color:#5a7c7a;">Auriculares inalámbricos con volumen limitado</div>
+            <div class="precio">$34.99</div>
+            <div class="badge-ejemplo">➕ Agregar al carrito</div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- DESCRIPCIÓN DEL PEDIDO (REFERENCIA) -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo-small">📄 Ejemplo de visualización del carrito</div>
+    <table>
+        <thead>
+            <tr><th>Producto</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th><th></th></tr>
+        </thead>
+        <tbody>
+            <tr><td>My Music Center Synthesizer</td><td>1</td><td>$49.99</td><td>$49.99</td><td><span class="badge-ejemplo">🗑️</span></td></tr>
+            <tr><td>Toy Grocery Cash Register</td><td>2</td><td>$24.99</td><td>$49.98</td><td><span class="badge-ejemplo">🗑️</span></td></tr>
+            <tr><td>Cuentos Infantiles</td><td>1</td><td>$12.99</td><td>$12.99</td><td><span class="badge-ejemplo">🗑️</span></td></tr>
+        </tbody>
+    </table>
+    <div style="text-align: right; margin: 1rem 0; font-weight: 800; font-size: 1.2rem;">Total: $112.96</div>
+
+    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin: 1rem 0;">
+        <div class="badge-ejemplo">🔙 Continuar comprando</div>
+        <div class="badge-ejemplo">✅ Completar compra</div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CRITERIOS DE EVALUACIÓN -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo">📋 Criterios de Evaluación · 100 puntos</div>
+    <table>
+        <thead>
+            <tr><th>Criterio</th><th>Descripción</th><th>Ptos</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Componentes React</td><td>Uso adecuado de componentes funcionales, props y hooks (useState, useEffect)</td><td class="puntos">15</td></tr>
+            <tr><td>Gestión de categorías</td><td>Listado de categorías y filtrado de productos al seleccionar una categoría</td><td class="puntos">15</td></tr>
+            <tr><td>Gestión de productos</td><td>Visualización de productos con nombre, descripción, precio e imagen</td><td class="puntos">10</td></tr>
+            <tr><td>Agregar al carrito</td><td>Función para agregar productos, evitar duplicados acumulando cantidad</td><td class="puntos">15</td></tr>
+            <tr><td>Modificar cantidades</td><td>Botones para incrementar/decrementar cantidad por producto en el carrito</td><td class="puntos">10</td></tr>
+            <tr><td>Eliminar del carrito</td><td>Opción para eliminar un producto completo del carrito</td><td class="puntos">10</td></tr>
+            <tr><td>Cálculos totales</td><td>Subtotales por producto y total general del carrito correctos</td><td class="puntos">10</td></tr>
+            <tr><td>Persistencia localStorage</td><td>El carrito se guarda y recupera al recargar la página</td><td class="puntos">5</td></tr>
+            <tr><td>Opciones finales</td><td>Botones "Continuar comprando" y "Completar compra" (alert con resumen)</td><td class="puntos">5</td></tr>
+            <tr><td>Diseño y UX</td><td>Interfaz atractiva, responsiva y fácil de usar</td><td class="puntos">5</td></tr>
+        </tbody>
+        <tr style="background:#cfe3df; font-weight:700;"><td colspan="2">TOTAL</td><td class="puntos">100</td></tr>
+    </table>
+
+    <!-- ============================================ -->
+    <!-- OBSERVACIONES -->
+    <!-- ============================================ -->
+    <div class="card-ejercicio" style="background:#fffbee; border-color:#e07c3c;">
+        <h4>📌 Restricciones técnicas</h4>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+            <li>✅ <strong>Obligatorio:</strong> Desarrollar la aplicación con <strong>React</strong> (create-react-app o Vite).</li>
+            <li>✅ <strong>No se permite</strong> el uso de base de datos (MySQL, PostgreSQL, MongoDB, etc.).</li>
+            <li>✅ Los datos de categorías y productos deben estar en <strong>arrays precargados</strong> dentro del estado de React.</li>
+            <li>✅ El carrito debe persistir usando <strong>localStorage</strong>.</li>
+            <li>✅ Se valorará el uso de <strong>useContext</strong> para compartir el estado del carrito entre componentes.</li>
+            <li>✅ Entregar: código fuente completo (archivos .jsx/.css) + capturas de pantalla del funcionamiento.</li>
+        </ul>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ENTREGABLES -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo-small">📎 Entregables esperados</div>
+    <div class="card-ejercicio">
+        <ul style="margin-left: 1.5rem;">
+            <li>📁 Código fuente completo del proyecto React (carpeta src completa).</li>
+            <li>📸 Capturas de pantalla del funcionamiento (categorías, productos, agregar al carrito, modificar cantidades, completar compra).</li>
+            <li>📄 Breve documentación (README) con instrucciones para ejecutar el proyecto.</li>
+            <li>🎥 Entrega de proyecto en la plataforma.</li>
+        </ul>
+    </div>
+
+    <hr>
+    <div class="firma-carnet">
+        <div><strong>Carnet estudiante:</strong> ________________________</div>
+        <div><strong>Fecha de entrega:</strong> 17/04/2026</div>
+    </div>
+    <div class="footnote">
+        Ejercicio de Carrito de Compras con <strong>React</strong> · Sin base de datos · Persistencia con localStorage
+        <br> Revise cada requisito antes de entregar.
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio · Tablas de Multiplicar · React + Mensajes IA · CAI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #eef2f5;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+        .hoja {
+            max-width: 1280px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.25);
+            overflow: hidden;
+            padding: 2rem 2.2rem;
+            border: 1px solid rgba(0,80,100,0.1);
+        }
+        .catedra {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #1e6f5c;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .catedra-titulo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e5a5c;
+            letter-spacing: -0.3px;
+        }
+        .catedra-titulo span {
+            font-weight: 300;
+            font-size: 1rem;
+            color: #2c7a6e;
+            display: block;
+            line-height: 1.2;
+        }
+        .agile-badge {
+            text-align: right;
+            font-weight: 600;
+            color: #1c6b5e;
+            border-left: 2px solid #bdd4cf;
+            padding-left: 1.2rem;
+        }
+        .agile-badge small {
+            display: block;
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: #2f6b62;
+        }
+        .materia {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            background: #f0f7f5;
+            padding: 1rem 1.4rem;
+            border-radius: 24px;
+            margin: 0.8rem 0 1.8rem;
+            border: 1px dashed #289b87;
+        }
+        .materia h2 {
+            font-weight: 500;
+            color: #175f53;
+            font-size: 1.6rem;
+        }
+        .materia .lab {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: #1e6f5c;
+            color: white;
+            padding: 0.2rem 1.2rem;
+            border-radius: 60px;
+            letter-spacing: 1px;
+        }
+        .fila-alumno {
+            background: #ffffff;
+            border: 2px solid #cfe3df;
+            border-radius: 40px;
+            padding: 1.2rem 2rem;
+            margin: 1.5rem 0 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.1rem;
+        }
+        .fila-alumno div {
+            margin: 0.3rem 0;
+        }
+        .linea-nota {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .linea-nota strong {
+            background: #cf6f4a;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+        .seccion-titulo {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #175f53;
+            margin: 2rem 0 1rem 0;
+            border-left: 12px solid #f4b436;
+            padding-left: 1rem;
+        }
+        .seccion-titulo-small {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #175f53;
+            margin: 1.5rem 0 0.8rem 0;
+            border-left: 8px solid #f4b436;
+            padding-left: 1rem;
+        }
+        .card-ejercicio {
+            background: #f9fcff;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid #d3e4ec;
+        }
+        .requisito {
+            background: #fff2cf;
+            padding: 0.5rem 1rem;
+            border-radius: 16px;
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+        .badge-ejemplo {
+            background: #fff2cf;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #8a6100;
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+        .badge-react {
+            background: #61dafb;
+            color: #20232a;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-ia {
+            background: #8e44ad;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .grid-tablas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .tabla-opcion {
+            background: linear-gradient(135deg, #175f53, #1e6f5c);
+            color: white;
+            text-align: center;
+            padding: 1.2rem;
+            border-radius: 24px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tabla-opcion:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        }
+        .numero-animado {
+            display: inline-block;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-right: 0.3rem;
+            animation: bounce 0.6s ease infinite alternate;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .tabla-opcion:nth-child(1) .numero-animado { animation-delay: 0s; color: #FFD700; }
+        .tabla-opcion:nth-child(2) .numero-animado { animation-delay: 0.05s; color: #FFA500; }
+        .tabla-opcion:nth-child(3) .numero-animado { animation-delay: 0.1s; color: #FF6B6B; }
+        .tabla-opcion:nth-child(4) .numero-animado { animation-delay: 0.15s; color: #4ECDC4; }
+        .tabla-opcion:nth-child(5) .numero-animado { animation-delay: 0.2s; color: #45B7D1; }
+        .tabla-opcion:nth-child(6) .numero-animado { animation-delay: 0.25s; color: #96CEB4; }
+        .tabla-opcion:nth-child(7) .numero-animado { animation-delay: 0.3s; color: #FFEAA7; }
+        .tabla-opcion:nth-child(8) .numero-animado { animation-delay: 0.35s; color: #DDA0DD; }
+        .tabla-opcion:nth-child(9) .numero-animado { animation-delay: 0.4s; color: #F7DC6F; }
+        .tabla-opcion:nth-child(10) .numero-animado { animation-delay: 0.45s; color: #85C1E9; }
+
+        @keyframes bounce {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-8px) scale(1.1); }
+        }
+
+        .imagen-figura {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .ejemplo-pregunta {
+            background: #e0efea;
+            border-radius: 20px;
+            padding: 1rem;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+        .mensaje-correcto {
+            background: #d4edda;
+            color: #155724;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .mensaje-incorrecto {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        hr {
+            border: 1px solid #c6dee9;
+            margin: 1.5rem 0;
+        }
+        .firma-carnet {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 1.5rem;
+            border-top: 2px solid #bdd4cf;
+            margin-top: 2rem;
+            padding-top: 1.2rem;
+            font-size: 1.1rem;
+            color: #175f53;
+        }
+        .footnote {
+            text-align: right;
+            color: #397a8b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .instruccion {
+            background: #eef3f0;
+            border-left: 8px solid #289b87;
+            padding: 0.8rem 1.8rem;
+            border-radius: 32px;
+            margin: 1rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.6rem;
+            text-align: left;
+            border-bottom: 1px solid #cbdae3;
+        }
+        th {
+            background: #e0efea;
+            color: #175f53;
+        }
+        .puntos {
+            text-align: center;
+            font-weight: 700;
+            color: #175f53;
+            background: #ebf5f9;
+            border-radius: 20px;
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+<div class="hoja">
+
+    <!-- ENCABEZADO -->
+    <div class="catedra">
+        <div class="catedra-titulo">
+            UNICAES
+            <span>Instrucción Asistida por Computadora · CAI</span>
+        </div>
+        <div class="agile-badge">
+            Ejercicio · Tablas de Multiplicar con React
+            <small>Valor: 20%</small>
+        </div>
+    </div>
+
+    <!-- MATERIA Y DETALLES -->
+    <div class="materia">
+        <h2>
+            ⚛️ Tablas de Multiplicar · React + Mensajes generados por IA
+        </h2>
+        <div class="lab">Parcial #2</div>
+    </div>
+
+    <!-- GRUPO Y FECHA -->
+    <div style="display: flex; gap: 2rem; justify-content: space-between; background: #e0efea; padding: 0.6rem 2rem; border-radius: 40px; margin-bottom: 0.8rem;">
+        <div><strong>Estudiante:</strong> _________________________________</div>
+        <div><strong>Fecha:</strong> 17-04-2026</div>
+        <div class="linea-nota"><strong>Nota:</strong> _________</div>
+    </div>
+
+    <!-- DATOS DEL ALUMNO -->
+    <div class="fila-alumno">
+        <div><strong>Nombre completo:</strong> __________________________________________________</div>
+        <div class="linea-nota"><strong>Carnet:</strong> ________________________</div>
+    </div>
+
+    <div class="instruccion">
+        <span class="badge-agil">📌 Tecnologías requeridas:</span>
+        <p style="margin-top: 0.5rem; font-size: 1rem; color: #1c5a4f;">
+            <span class="badge-react">⚛️ React</span>
+            <span class="badge-react">📦 useState / useEffect</span>
+            <span class="badge-ia">🤖 Mensajes generados por IA</span>
+            <br><strong>La solución debe desarrollarse completamente con React</strong> · Los mensajes de retroalimentación deben ser generados por IA (usando API de OpenAI, Gemini, o simulando respuestas de IA con un array de mensajes creativos y variados).
+        </p>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ENUNCIADO DEL EJERCICIO -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo">📝 Enunciado: Aplicación para practicar tablas de multiplicar con React</div>
+
+    <div class="card-ejercicio">
+        <h3>🎯 Requerimientos funcionales</h3>
+
+        <div class="requisito">
+            <strong>1. Selección de tablas</strong><br>
+            Los usuarios podrán elegir la <strong>tabla o tablas</strong> que desean practicar antes de iniciar.
+            Debe incluir imágenes de números con figuras llamativas (números animados).
+        </div>
+
+        <div class="requisito">
+            <strong>2. Orden aleatorio sin repetición</strong><br>
+            El orden de los números del 1 al 10 tiene que ser <strong>al azar sin repetirse</strong> (Fisher-Yates shuffle).
+        </div>
+
+        <div class="requisito">
+            <strong>3. Formato de preguntas</strong><br>
+            Las preguntas se mostrarán en el formato: <strong>5 x 7 = _____</strong>
+        </div>
+
+        <div class="requisito">
+            <strong>4. Mensajes generados por IA para respuestas correctas</strong><br>
+            Los comentarios para respuesta correcta deben ser <strong>generados por IA</strong> (usando API de OpenAI, Gemini, o simulando con un array de mensajes creativos estilo IA). Ejemplos:
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                <span class="mensaje-correcto">✓ ¡Excelente! Eres un genio de las matemáticas</span>
+                <span class="mensaje-correcto">✓ ¡Perfecto! Sigue así campeón</span>
+                <span class="mensaje-correcto">✓ ¡Muy bien! Tu esfuerzo está dando frutos</span>
+                <span class="mensaje-correcto">✓ ¡Increíble! Lo hiciste mejor que una calculadora</span>
+            </div>
+        </div>
+
+        <div class="requisito">
+            <strong>5. Mensajes generados por IA para respuestas incorrectas</strong><br>
+            Los comentarios para respuesta incorrecta deben ser <strong>generados por IA</strong>, motivadores y alentadores. Ejemplos:
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                <span class="mensaje-incorrecto">✗ ¡Casi! Revísalo de nuevo, tú puedes</span>
+                <span class="mensaje-incorrecto">✗ No te rindas, cada error te acerca al éxito</span>
+                <span class="mensaje-incorrecto">✗ Intenta de nuevo, la práctica hace al maestro</span>
+                <span class="mensaje-incorrecto">✗ ¡Sigue intentando! Los grandes matemáticos también se equivocan</span>
+            </div>
+        </div>
+
+        <div class="requisito">
+            <strong>6. Generación aleatoria de mensajes IA</strong><br>
+            Cada vez que el usuario responda, se debe seleccionar aleatoriamente un mensaje del array de mensajes estilo IA (simulando variedad y personalidad).
+        </div>
+
+        <div class="requisito">
+            <strong>7. Flujo del ejercicio</strong><br>
+            El componente React generará cada una de las preguntas de la(s) tabla(s) seleccionada(s) y esperará la respuesta del usuario.
+        </div>
+
+        <div class="requisito">
+            <strong>8. Resultados finales</strong><br>
+            Al finalizar, verificará:
+            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                <li>✅ Porcentaje de aciertos</li>
+                <li>✅ Porcentaje de errores</li>
+                <li>✅ Número total de respuestas correctas e incorrectas</li>
+            </ul>
+        </div>
+
+        <div class="requisito">
+            <strong>9. Retroalimentación visual con IA</strong><br>
+            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                <li>Si el porcentaje es <strong>mayor o igual al 75%</strong>: mostrar una <strong>carita feliz animada</strong> y un mensaje de felicitación generado por IA.</li>
+                <li>Si el porcentaje es <strong>menor al 75%</strong>: mostrar una <strong>imagen animada estudiando</strong> y un mensaje de ánimo generado por IA para seguir practicando.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- EJEMPLO VISUAL DE SELECCIÓN DE TABLAS CON NÚMEROS ANIMADOS -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo-small">🎨 Ejemplo visual de selección de tablas (Números animados)</div>
+    <div class="grid-tablas">
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🐶</div>
+            <div><span class="numero-animado">1</span><span> Tabla del 1</span></div>
+        </div>
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🐱</div>
+            <div><span class="numero-animado">2</span><span> Tabla del 2</span></div>
+        </div>
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🐭</div>
+            <div><span class="numero-animado">3</span><span> Tabla del 3</span></div>
+        </div>
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🐹</div>
+            <div><span class="numero-animado">4</span><span> Tabla del 4</span></div>
+        </div>
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🐰</div>
+            <div><span class="numero-animado">5</span><span> Tabla del 5</span></div>
+        </div>
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🦊</div>
+            <div><span class="numero-animado">6</span><span> Tabla del 6</span></div>
+        </div>
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🐻</div>
+            <div><span class="numero-animado">7</span><span> Tabla del 7</span></div>
+        </div>
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🐼</div>
+            <div><span class="numero-animado">8</span><span> Tabla del 8</span></div>
+        </div>
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🐨</div>
+            <div><span class="numero-animado">9</span><span> Tabla del 9</span></div>
+        </div>
+        <div class="tabla-opcion">
+            <div class="imagen-figura">🦁</div>
+            <div><span class="numero-animado">10</span><span> Tabla del 10</span></div>
+        </div>
+    </div>
+    <div class="badge-ejemplo">💡 Cada tabla tiene una imagen llamativa (figuras de animales) y números con animación de rebote.</div>
+
+    <!-- ============================================ -->
+    <!-- EJEMPLO DE MENSAJES ESTILO IA -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo-small">🤖 Ejemplos de mensajes generados por IA</div>
+    <div class="card-ejercicio">
+        <h4>Mensajes para respuestas correctas:</h4>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0;">
+            <span class="mensaje-correcto">🎉 ¡Brillante! Tu inteligencia me sorprende</span>
+            <span class="mensaje-correcto">🌟 ¡Eres un campeón matemático!</span>
+            <span class="mensaje-correcto">💪 ¡Fuerte y correcto! Así se hace</span>
+            <span class="mensaje-correcto">🧠 ¡Tu cerebro está en modo superhéroe!</span>
+            <span class="mensaje-correcto">🏆 ¡Respuesta correcta! Eres increíble</span>
+            <span class="mensaje-correcto">✨ ¡Perfecto! La práctica te está volviendo experto</span>
+        </div>
+
+        <h4 style="margin-top: 1rem;">Mensajes para respuestas incorrectas:</h4>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0;">
+            <span class="mensaje-incorrecto">🤔 ¡Ups! Por poco, inténtalo de nuevo</span>
+            <span class="mensaje-incorrecto">🌱 Los errores son oportunidades para aprender</span>
+            <span class="mensaje-incorrecto">💡 ¡Casi! La próxima será la correcta</span>
+            <span class="mensaje-incorrecto">📚 Revisa tu respuesta, tú puedes lograrlo</span>
+            <span class="mensaje-incorrecto">🎯 No te desanimes, cada intento cuenta</span>
+            <span class="mensaje-incorrecto">⭐ Sigue practicando, vas por buen camino</span>
+        </div>
+        <div class="badge-ejemplo" style="margin-top: 0.8rem;">🤖 Los mensajes deben seleccionarse aleatoriamente para mantener la frescura y motivación del estudiante.</div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CRITERIOS DE EVALUACIÓN -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo">📋 Criterios de Evaluación · 100 puntos</div>
+    <table>
+        <thead>
+            <tr><th>Criterio</th><th>Descripción</th><th>Ptos</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="puntos">1</td>
+                <td>Aplicación desarrollada completamente con <strong>React</strong> (componentes funcionales, hooks)</td>
+                <td class="puntos">10</td>
+            </tr>
+            <tr>
+                <td class="puntos">2</td>
+                <td>Permite seleccionar la tabla utilizando imágenes llamativas y números animados</td>
+                <td class="puntos">15</td>
+            </tr>
+            <tr>
+                <td class="puntos">3</td>
+                <td>Muestra las preguntas en orden aleatorio sin repetirse (números del 1 al 10)</td>
+                <td class="puntos">15</td>
+            </tr>
+            <tr>
+                <td class="puntos">4</td>
+                <td>Mensajes de retroalimentación <strong>generados por IA</strong> (arrays de mensajes creativos y variados)</td>
+                <td class="puntos">20</td>
+            </tr>
+            <tr>
+                <td class="puntos">5</td>
+                <td>Mensajes aleatorios tanto para respuestas correctas como incorrectas</td>
+                <td class="puntos">10</td>
+            </tr>
+            <tr>
+                <td class="puntos">6</td>
+                <td>Calcula y muestra porcentaje de aciertos y errores al finalizar</td>
+                <td class="puntos">10</td>
+            </tr>
+            <tr>
+                <td class="puntos">7</td>
+                <td>Retroalimentación visual según porcentaje (≥75% carita feliz, <75% imagen estudiando)</td>
+                <td class="puntos">10</td>
+            </tr>
+            <tr>
+                <td class="puntos">8</td>
+                <td>Diseño atractivo, responsivo y adecuado para niños de 4º grado</td>
+                <td class="puntos">5</td>
+            </tr>
+            <tr>
+                <td class="puntos">9</td>
+                <td>Funcionalidad completa sin errores y experiencia de usuario fluida</td>
+                <td class="puntos">5</td>
+            </tr>
+        </tbody>
+        <tr style="background:#cfe3df; font-weight:700;"><td colspan="2">TOTAL</td><td class="puntos">100</td></tr>
+    </table>
+
+    <!-- ============================================ -->
+    <!-- EJEMPLO DE IMÁGENES PARA RESULTADOS -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo-small">🎭 Ejemplos de imágenes para resultados</div>
+    <div class="card-ejercicio" style="display: flex; gap: 2rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+        <div style="text-align: center;">
+            <div style="font-size: 4rem; animation: bounce 0.8s ease infinite alternate;">😊</div>
+            <div><strong>≥ 75%</strong> → Carita feliz animada</div>
+            <div class="badge-ejemplo">🤖 "¡Eres un genio! Sigue así"</div>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 4rem; animation: float 2s ease-in-out infinite;">📚</div>
+            <div><strong>&lt; 75%</strong> → Imagen estudiando animada</div>
+            <div class="badge-ejemplo">🤖 "¡Sigue practicando! Cada día mejoras"</div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- OBSERVACIONES -->
+    <!-- ============================================ -->
+    <div class="card-ejercicio" style="background:#fffbee; border-color:#e07c3c;">
+        <h4>📌 Requisitos técnicos obligatorios</h4>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+            <li>✅ <strong>React</strong> (Create React App o Vite) - Obligatorio</li>
+            <li>✅ <strong>Mensajes estilo IA</strong> (arrays con mensajes creativos, variados y motivadores)</li>
+            <li>✅ <strong>useState y useEffect</strong> para manejar el estado de la aplicación</li>
+            <li>✅ Orden aleatorio de números con algoritmo <strong>Fisher-Yates</strong> (sin repetición)</li>
+            <li>✅ Componentes modulares y reutilizables</li>
+            <li>✅ Diseño responsivo con CSS moderno</li>
+        </ul>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ENTREGABLES -->
+    <!-- ============================================ -->
+    <div class="seccion-titulo-small">📎 Entregables esperados</div>
+    <div class="card-ejercicio">
+        <ul style="margin-left: 1.5rem;">
+            <li>📁 Código fuente completo del proyecto React (carpeta src completa)</li>
+            <li>📸 Capturas de pantalla del funcionamiento (selección de tablas, preguntas, mensajes IA, resultados finales)</li>
+            <li>📄 Breve documentación explicando la lógica implementada</li>
+            <li>🎥 (Opcional) Video demostrativo de máximo 2 minutos</li>
+        </ul>
+    </div>
+
+    <hr>
+    <div class="firma-carnet">
+        <div><strong>Carnet estudiante:</strong> ________________________</div>
+        <div><strong>Fecha de entrega:</strong> 17/04/2026</div>
+    </div>
+    <div class="footnote">
+        Ejercicio de Tablas de Multiplicar con <strong>React</strong> · Mensajes generados por IA (simulados con arrays creativos) · Porcentaje de aciertos
+        <br> Números animados para una experiencia atractiva y motivadora para niños de 4º grado.
+    </div>
+
+</div>
+</body>
+</html>
